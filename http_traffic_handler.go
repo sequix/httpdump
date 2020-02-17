@@ -303,6 +303,14 @@ func (h *HTTPTrafficHandler) printBody(hasBody bool, header httpport.Header, rea
 	isText := mimeType.isTextContent()
 	isBinary := mimeType.isBinaryContent()
 
+	if h.config.level == "raw" {
+		err = h.printRawBody(nr)
+		if err != nil {
+			h.writeLine("{Read content error", err, "}")
+		}
+		return
+	}
+
 	if !isText {
 		err = h.printNonTextTypeBody(nr, contentType, isBinary)
 		if err != nil {
@@ -339,6 +347,15 @@ func (h *HTTPTrafficHandler) printBody(hasBody bool, header httpport.Header, rea
 	}
 	h.writeLine(body)
 	h.writeLine()
+}
+
+func (h *HTTPTrafficHandler) printRawBody(reader io.Reader) error {
+	body, err := ioutil.ReadAll(reader)
+	if err != nil {
+		return err
+	}
+	h.writeLine(string(body))
+	return nil
 }
 
 func (h *HTTPTrafficHandler) printNonTextTypeBody(reader io.Reader, contentType string, isBinary bool) error {
