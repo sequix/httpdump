@@ -311,6 +311,30 @@ func (h *HTTPTrafficHandler) printBody(hasBody bool, header httpport.Header, rea
 		return
 	}
 
+	if strings.HasPrefix(h.config.level, "prefix-") && strings.HasPrefix(contentType, h.config.level[len("prefix-"):]) {
+		err = h.printRawBody(nr)
+		if err != nil {
+			h.writeLine("{Read content error", err, "}")
+		}
+		return
+	}
+
+	if strings.HasPrefix(h.config.level, "suffix-") && strings.HasSuffix(contentType, h.config.level[len("suffix-"):]) {
+		err = h.printRawBody(nr)
+		if err != nil {
+			h.writeLine("{Read content error", err, "}")
+		}
+		return
+	}
+
+	if strings.HasPrefix(h.config.level, "contains-") && strings.Contains(contentType, h.config.level[len("contains-"):]) {
+		err = h.printRawBody(nr)
+		if err != nil {
+			h.writeLine("{Read content error", err, "}")
+		}
+		return
+	}
+
 	if !isText {
 		err = h.printNonTextTypeBody(nr, contentType, isBinary)
 		if err != nil {
