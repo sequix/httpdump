@@ -24,7 +24,7 @@ Libpcap and header files should be available in macOS already.
 ## Install
 
 ```sh
-go get github.com/hsiafan/httpdump
+go get github.com/sequix/httpdump
 ```
 
 
@@ -46,6 +46,9 @@ httpdump can read from pcap file, or capture data from network interfaces:
     	Filter by ip, if either source or target ip is matched, the packet will be processed
   -level string
     	Output level, options are: url(only url) | header(http headers) | all(headers, and textuary http body) (default "header")
+        prefix-<xxx> output body for contentType with prefix <xxx>
+        suffix-<xxx> output body for contentType with suffix <xxx>
+        contains-<xxx> output body for contentType containing <xxx>
   -output string
     	Write result to file [output] instead of stdout
   -port uint
